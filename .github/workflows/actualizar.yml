@@ -1,0 +1,44 @@
+name: Actualizar meteorologia y publicar Pages
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 */6 * * *'
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Instalar dependencias
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y libeccodes0 || sudo apt-get install -y libeccodes-dev
+          pip install -r requirements.txt
+      - name: Descargar y preparar meteorologia
+        run: python actualizar_datos.py
+      - name: Preparar sitio estatico
+        run: |
+          mkdir -p site/data
+          cp data/meteorologia.json site/data/meteorologia.json
+          printf '<!doctype html><html><meta charset="utf-8"><title>Tropical Weather Monitor Data</title><body><h1>Tropical Weather Monitor</h1><p>Datos meteorológicos: <a href="data/meteorologia.json">meteorologia.json</a></p></body></html>' > site/index.html
+          touch site/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
