@@ -123,105 +123,100 @@ def _placemarks(root):
             if points:results.append({'name':name,'description':re.sub('<[^>]*>',' ',desc)[:450], 'kind':kind,'coords':points})
     return results
 
-def obtener_nhc():
-    ses=requests.Session();ses.headers.update({'User-Agent':'TropicalWeatherMonitor/0.4 educational'})
+def _number(value):
     try:
-        r=ses.get(NHC_FEED,timeout=25);r.raise_for_status()
-        root=_xml_kmz(r.content)
-        links=[]
-        for node in root.iter():
-            if node.tag.split('}')[-1]!='NetworkLink':continue
-            name=next((e.text for e in node if e.tag.split('}')[-1]=='name'),'') or ''
-            href=next((e.text for e in node.iter() if e.tag.split('}')[-1]=='href'),None)
-            if href:links.append((name,urljoin(NHC_FEED,href)))
-        # Resolver enlaces anidados y reunir candidatos antes de dibujar.
-        # No mezclar indiscriminadamente geometrías de avisos diferentes.
-        queue=[(name,url,0) for name,url in links]; visited=set(); candidates={}
-        while queue and len(visited)<65:
-            name,url,depth=queue.pop(0)
-            if url in visited:continue
-            visited.add(url)
-            lower=(name+' '+url).lower()
-            if any(x in lower for x in ['warning','surge','probabilit','radii','swath','outlook','arrival']):continue
-            try:
-                rr=ses.get(url,timeout=20);rr.raise_for_status()
-                sub=_xml_kmz(rr.content)
-            except Exception:continue
-            if depth<2:
-                for node in sub.iter():
-                    if node.tag.split('}')[-1]=='NetworkLink':
-                        nm=next((e.text for e in node if e.tag.split('}')[-1]=='name'),'') or ''
-                        href=next((e.text for e in node.iter() if e.tag.split('}')[-1]=='href'),None)
-                        if href:queue.append((nm,urljoin(url,href),depth+1))
-            kind='cone' if 'cone' in lower else 'track' if any(x in lower for x in ['track','forecast','fcst']) else 'other'
-            if kind=='other':continue
-            m=re.search(r'(AL|EP|CP)\d{2}20\d{2}',url,re.I)
-            if not m:continue  # No atribuir geometría sin identificador inequívoco.
-            sid=m.group(0).upper()
-            geom=_placemarks(sub)
-            lines=[pm['coords'] for pm in geom if pm['kind']=='LineString']
-            polygons=[pm['coords'] for pm in geom if pm['kind']=='Polygon']
-            pts=[{'coord':pm['coords'][0],'name':pm['name'],'description':pm['description']} for pm in geom if pm['kind']=='Point']
-            if kind=='track' and not lines:continue
-            if kind=='cone' and not polygons:continue
-            candidates.setdefault(sid,{}).setdefault(kind,[]).append({'url':url,'lines':lines,'polygons':polygons,'points':pts})
-        storms=[]
-        for sid, kinds in candidates.items():
-            # Seleccionar un solo archivo por tipo. Si hay varios avisos,
-            # no combinar trayectorias: escoger el de nombre más reciente.
-            def latest(items):
-                return sorted(items,key=lambda x:x['url'])[-1] if items else None
-            tr=latest(kinds.get('track',[])); co=latest(kinds.get('cone',[]))
-            if not tr and not co:continue
-            lines=(tr or {}).get('lines',[])
-            polys=(co or {}).get('polygons',[])
-            # Las posiciones de los KML pueden contener tiempos históricos.
-            # No dibujar todos los puntos ni presentarlos como posiciones actuales.
-            # Solo un punto ilustrativo al inicio de la línea, sin categoría inferida.
-            storms.append({'id':sid,'name':sid,'track':lines[:1], 'cone':polys[:1],
-                           'points':[], 'source_track':tr['url'] if tr else '',
-                           'source_cone':co['url'] if co else ''})
-        out={'status':'ok','consultado_utc':datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC'), 'storms':storms}
-        NHC_CACHE.write_text(json.dumps(out,ensure_ascii=False),encoding='utf-8')
-        print('NHC: ciclones con geometría:',len(out['storms']))
-        return out
-    except Exception as exc:
-        print('AVISO: NHC no disponible:',exc)
-        if NHC_CACHE.exists():
-            old=json.loads(NHC_CACHE.read_text(encoding='utf-8'));old['status']='cache';return old
-        return {'status':'unavailable','consultado_utc':'','storms':[]}
+        return float(value)
+    except (TypeError, ValueError):
+        return None
 
-def posiciones_oficiales_nhc():
-    """Obtiene centros del listado de ciclones activos; nunca infiere centros del viento."""
-    url = 'https://www.nhc.noaa.gov/CurrentStorms.json'
+def _nhc_position(storm):
+    """Usar los campos numéricos publicados explícitamente por el NHC."""
+    lat=_number(storm.get('latitudeNumeric'))
+    lon=_number(storm.get('longitudeNumeric'))
+    if lat is None or lon is None:
+        def parse_cardinal(s, positive, negative):
+            if not isinstance(s,str): return _number(s)
+            m=re.fullmatch(r'\s*(\d+(?:\.\d+)?)\s*(['+positive+negative+r'])\s*',s,re.I)
+            if not m:return None
+            return float(m.group(1))*(1 if m.group(2).upper()==positive else -1)
+        lat=parse_cardinal(storm.get('latitude'),'N','S')
+        lon=parse_cardinal(storm.get('longitude'),'E','W')
+    if lat is None or lon is None or not (-90<=lat<=90 and -180<=lon<=180):return None
+    return lat,lon
+
+def _download_kmz(ses,url):
+    if not url or not url.startswith('https://www.nhc.noaa.gov/'):return []
+    r=ses.get(url,timeout=(15,35));r.raise_for_status()
+    if len(r.content)>12_000_000:raise ValueError('KMZ demasiado grande')
+    return _placemarks(_xml_kmz(r.content))
+
+def obtener_productos_nhc():
+    """Fuente única NHC: cada tormenta enlaza su propio KMZ de trayectoria y cono.
+    Nunca se asignan centros basados en un vértice ni en el viento GFS.
+    """
+    now=datetime.now(timezone.utc).isoformat()
+    ses=requests.Session()
+    ses.headers.update({'User-Agent':'TropicalWeatherMonitor/0.5 (meteorological visualization)'})
     try:
-        r=requests.get(url,timeout=25,headers={'User-Agent':'TropicalWeatherMonitor/0.4 educational'})
-        r.raise_for_status()
-        raw=r.json()
-        storms=raw.get('activeStorms',raw.get('currentStorms',[])) if isinstance(raw,dict) else []
-        result=[]
-        for s in storms:
-            if not isinstance(s,dict):continue
-            def first(*keys):
-                return next((s[k] for k in keys if s.get(k) is not None),None)
-            lat=first('latitude','lat');lon=first('longitude','lon','long')
-            try: lat=float(lat);lon=float(lon)
-            except (ValueError,TypeError):continue
-            if not (-125<=lon<=-75 and 5<=lat<=34):continue
-            result.append({'id':str(first('id','stormId','stormID') or ''),'name':str(first('name','stormName') or 'Ciclón'),
-                'lat':lat,'lon':lon,'classification':first('classification','stormType','type'),
-                'wind':first('intensity','maxWind','windSpeed'),'pressure':first('pressure','minimumPressure'),
-                'updated':first('lastUpdate','advisoryDate','date')})
-        return {'status':'ok','storms':result,'consultado_utc':datetime.now(timezone.utc).isoformat()}
+        r=ses.get('https://www.nhc.noaa.gov/CurrentStorms.json',timeout=(15,35))
+        r.raise_for_status();raw=r.json()
+        if not isinstance(raw,dict) or not isinstance(raw.get('activeStorms'),list):
+            raise ValueError('Estructura inesperada de CurrentStorms.json')
     except Exception as exc:
-        print('Aviso: posiciones oficiales NHC no disponibles:',str(exc)[:150])
-        return {'status':'unavailable','storms':[]}
+        print('NHC no disponible:',exc)
+        return ({'status':'unavailable','consultado_utc':now,'storms':[]},
+                {'status':'unavailable','consultado_utc':now,'storms':[]})
+    centers=[];products=[]
+    for storm in raw['activeStorms']:
+        if not isinstance(storm,dict):continue
+        pos=_nhc_position(storm)
+        if not pos:continue
+        lat,lon=pos
+        if not (SUR<=lat<=NORTE and OESTE<=lon<=ESTE):continue
+        sid=str(storm.get('id') or '').upper()
+        if not re.fullmatch(r'(AL|EP|CP)\d{2}20\d{2}',sid):continue
+        def url(section):
+            item=storm.get(section) or {}
+            return item.get('kmzFile') if isinstance(item,dict) else None
+        center={'id':sid,'name':storm.get('name') or sid,'lat':lat,'lon':lon,
+                'classification':storm.get('classification'),
+                'wind':_number(storm.get('intensity')),
+                'pressure':_number(storm.get('pressure')),
+                'updated':storm.get('lastUpdate'),
+                'advisory_url':(storm.get('publicAdvisory') or {}).get('url'),
+                'forecast_url':(storm.get('forecastGraphics') or {}).get('url')}
+        centers.append(center)
+        track=[];cone=[];points=[];errors=[]
+        for section,kind in [('forecastTrack','track'),('trackCone','cone')]:
+            link=url(section)
+            if not link:continue
+            try:
+                marks=_download_kmz(ses,link)
+                if kind=='track':
+                    track=[pm['coords'] for pm in marks if pm['kind']=='LineString' and len(pm['coords'])>=2][:5]
+                    points=[{'coord':pm['coords'][0],'name':pm['name'],
+                             'description':pm['description']} for pm in marks
+                            if pm['kind']=='Point' and len(pm['coords'])==1][:35]
+                else:
+                    cone=[pm['coords'] for pm in marks if pm['kind']=='Polygon' and len(pm['coords'])>=3][:5]
+            except Exception as exc:
+                errors.append(kind+': '+str(exc)[:90])
+        products.append({'id':sid,'name':center['name'],'track':track,'cone':cone,
+                         'points':points,'source_track':url('forecastTrack') or '',
+                         'source_cone':url('trackCone') or '',
+                         'advisory_utc':(storm.get('forecastTrack') or {}).get('issuance'),
+                         'errors':errors})
+        print('NHC',sid,center['name'],'centro',lat,lon,
+              'trayectorias',len(track),'cono',len(cone),'puntos',len(points),
+              'avisos',errors)
+    return ({'status':'ok','consultado_utc':now,'storms':products},
+            {'status':'ok','consultado_utc':now,'storms':centers})
+
 if __name__ == '__main__':
     wind = obtener_gfs()
-    nhc = obtener_nhc()
-    centers = posiciones_oficiales_nhc()
+    nhc, centers = obtener_productos_nhc()
     payload = {'wind': wind, 'nhc': nhc, 'centers': centers,
-               'published_utc': datetime.now(timezone.utc).isoformat(), 'schema_version': 1}
+               'published_utc': datetime.now(timezone.utc).isoformat(), 'schema_version': 2}
     path = OUTPUT / 'meteorologia.json'
     path.write_text(json.dumps(payload, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     print('Publicado:', path, 'bytes:', path.stat().st_size)
