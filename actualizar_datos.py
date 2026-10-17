@@ -236,11 +236,52 @@ def obtener_productos_nhc():
     return ({'status':'ok','consultado_utc':now,'storms':products},
             {'status':'ok','consultado_utc':now,'storms':centers})
 
+
+# Open-Meteo Marine: oleaje de modelo en mar abierto, no medición in situ.
+# Una consulta por lote, sin extrapolar cuando el modelo no aporta valor.
+def obtener_oleaje_puertos():
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    catalogo = json.loads((Path(__file__).resolve().parent / 'puertos_oleaje.json').read_text(encoding='utf-8'))
+    ahora = datetime.now(timezone.utc).isoformat()
+    result = {'status':'partial','source':'Open-Meteo Marine API (modelo oceánico; no observación portuaria)',
+              'fetched_utc':ahora,'ports':{},'errors':[]}
+    def batch(group):
+        params={'latitude':','.join(str(p['lat']) for p in group),
+                'longitude':','.join(str(p['lon']) for p in group),
+                'current':'wave_height,wave_period,wave_direction',
+                'timezone':'GMT','cell_selection':'sea'}
+        r=requests.get('https://marine-api.open-meteo.com/v1/marine',params=params,timeout=(12,50),
+                       headers={'User-Agent':'MonitorHuracanesMexico/1.1 (educational)'})
+        r.raise_for_status();data=r.json()
+        if isinstance(data,dict):data=[data]
+        if not isinstance(data,list) or len(data)!=len(group):raise ValueError('Respuesta de longitud inesperada')
+        out={}
+        for p,item in zip(group,data):
+            cur=item.get('current') or {}
+            h=cur.get('wave_height');period=cur.get('wave_period');direction=cur.get('wave_direction')
+            if not isinstance(h,(float,int)) or not math.isfinite(h) or h<0:continue
+            out[p['id']]={'height':round(h,2),
+              'period':round(period,1) if isinstance(period,(int,float)) and math.isfinite(period) else None,
+              'direction':round(direction,0) if isinstance(direction,(int,float)) and math.isfinite(direction) else None,
+              'time':cur.get('time')}
+        return out
+    # Lotes limitados para reducir peticiones y permitir respuestas parciales.
+    groups=[catalogo[i:i+10] for i in range(0,len(catalogo),10)]
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        futures={pool.submit(batch,g):i for i,g in enumerate(groups)}
+        for future in as_completed(futures):
+            try:result['ports'].update(future.result())
+            except Exception as exc:result['errors'].append(str(exc)[:160])
+    result['status']='ok' if not result['errors'] else ('partial' if result['ports'] else 'unavailable')
+    print('Oleaje:',len(result['ports']),'de',len(catalogo),'recintos; lotes fallidos:',len(result['errors']))
+    return result
+
 if __name__ == '__main__':
     wind = obtener_gfs()
     nhc, centers = obtener_productos_nhc()
-    payload = {'wind': wind, 'nhc': nhc, 'centers': centers,
-               'published_utc': datetime.now(timezone.utc).isoformat(), 'schema_version': 2}
+    waves = obtener_oleaje_puertos()
+    payload = {'waves': waves, 'wind': wind, 'nhc': nhc, 'centers': centers,
+               'published_utc': datetime.now(timezone.utc).isoformat(), 'schema_version': 3}
     path = OUTPUT / 'meteorologia.json'
     path.write_text(json.dumps(payload, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     print('Publicado:', path, 'bytes:', path.stat().st_size)
