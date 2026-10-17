@@ -229,6 +229,8 @@ def obtener_productos_nhc():
                          'points':points,'source_track':url('forecastTrack') or '',
                          'source_cone':url('trackCone') or '',
                          'advisory_utc':(storm.get('forecastTrack') or {}).get('issuance'),
+                         'cone_issuance_utc':(storm.get('trackCone') or {}).get('issuance'),
+                         'cone_geometry_source':'NHC KMZ oficial (sin modificación geométrica)',
                          'errors':errors})
         print('NHC',sid,center['name'],'centro',lat,lon,
               'trayectorias',len(track),'cono',len(cone),'puntos',len(points),
