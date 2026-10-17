@@ -150,6 +150,29 @@ def _download_kmz(ses,url):
     if len(r.content)>12_000_000:raise ValueError('KMZ demasiado grande')
     return _placemarks(_xml_kmz(r.content))
 
+
+# Texto oficial del aviso público: fuente NHC, obtenido cuando el sitio está disponible.
+# El informe impreso se limita al resumen cuando el aviso completo no se puede recuperar.
+from html.parser import HTMLParser
+class _NHCPre(HTMLParser):
+    def __init__(self):super().__init__();self.depth=0;self.parts=[]
+    def handle_starttag(self,tag,attrs):
+        if tag=='pre':self.depth+=1
+    def handle_endtag(self,tag):
+        if tag=='pre' and self.depth:self.depth-=1
+    def handle_data(self,data):
+        if self.depth:self.parts.append(data)
+def _texto_aviso_nhc(sesion,url):
+    if not isinstance(url,str) or not re.fullmatch(r'https://www\.nhc\.noaa\.gov/[A-Za-z0-9_./-]+(?:\?[A-Za-z0-9_=&.-]+)?',url):return None
+    try:
+        r=sesion.get(url,timeout=(8,20));r.raise_for_status()
+        if len(r.content)>600_000:return None
+        p=_NHCPre();p.feed(r.text)
+        result='\n'.join(p.parts).strip()
+        return result[:30000] if len(result)>100 else None
+    except Exception as exc:
+        print('Aviso NHC no disponible para impresión:',str(exc)[:100]);return None
+
 def obtener_productos_nhc():
     """Fuente única NHC: cada tormenta enlaza su propio KMZ de trayectoria y cono.
     Nunca se asignan centros basados en un vértice ni en el viento GFS.
@@ -185,6 +208,7 @@ def obtener_productos_nhc():
                 'updated':storm.get('lastUpdate'),
                 'advisory_url':(storm.get('publicAdvisory') or {}).get('url'),
                 'forecast_url':(storm.get('forecastGraphics') or {}).get('url')}
+        center['advisory_text']=_texto_aviso_nhc(ses,center.get('advisory_url'))
         centers.append(center)
         track=[];cone=[];points=[];errors=[]
         for section,kind in [('forecastTrack','track'),('trackCone','cone')]:
