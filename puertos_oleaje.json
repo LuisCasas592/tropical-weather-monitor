@@ -1,0 +1,932 @@
+[
+  {
+    "id": "02001",
+    "name": "ROSARITO",
+    "lat": 32.3692,
+    "lon": -117.0731
+  },
+  {
+    "id": "02002",
+    "name": "LA MISIÓN",
+    "lat": 32.055,
+    "lon": -116.8801
+  },
+  {
+    "id": "02003",
+    "name": "EL SAUZAL",
+    "lat": 31.8944,
+    "lon": -116.7043
+  },
+  {
+    "id": "02004",
+    "name": "MARINA CORAL",
+    "lat": 31.8622,
+    "lon": -116.6612
+  },
+  {
+    "id": "02005",
+    "name": "ENSENADA",
+    "lat": 31.8522,
+    "lon": -116.6258
+  },
+  {
+    "id": "02006",
+    "name": "PUNTA CHINA",
+    "lat": 31.5176,
+    "lon": -116.6437
+  },
+  {
+    "id": "02007",
+    "name": "SAN QUINTÍN",
+    "lat": 30.4823,
+    "lon": -115.979
+  },
+  {
+    "id": "02008",
+    "name": "VENUSTIANO CARRANZA",
+    "lat": 28.0365,
+    "lon": -114.119
+  },
+  {
+    "id": "02009",
+    "name": "ISLA CEDROS",
+    "lat": 28.0958,
+    "lon": -115.185
+  },
+  {
+    "id": "02010",
+    "name": "SAN FELLIPE",
+    "lat": 30.9949,
+    "lon": -114.8247
+  },
+  {
+    "id": "02011",
+    "name": "PUERTECITOS",
+    "lat": 30.3438,
+    "lon": -114.6386
+  },
+  {
+    "id": "02012",
+    "name": "BAHIA DE LOS ANGELES",
+    "lat": 28.9479,
+    "lon": -113.5528
+  },
+  {
+    "id": "03001",
+    "name": "GUERRERO NEGRO",
+    "lat": 27.8969,
+    "lon": -114.1378
+  },
+  {
+    "id": "03002",
+    "name": "A. LÓPEZ MATEOS",
+    "lat": 25.1887,
+    "lon": -112.1151
+  },
+  {
+    "id": "03003",
+    "name": "SAN CARLOS",
+    "lat": 24.7863,
+    "lon": -112.1206
+  },
+  {
+    "id": "03004",
+    "name": "PUERTO CORTÉS",
+    "lat": 24.4747,
+    "lon": -111.8198
+  },
+  {
+    "id": "03005",
+    "name": "PUERTO ALCATRÁZ",
+    "lat": 24.5054,
+    "lon": -111.8437
+  },
+  {
+    "id": "03006",
+    "name": "SAN JOSE DEL CABO",
+    "lat": 23.0573,
+    "lon": -109.6917
+  },
+  {
+    "id": "03007",
+    "name": "CABO SAN LUCAS",
+    "lat": 22.8806,
+    "lon": -109.9085
+  },
+  {
+    "id": "03008",
+    "name": "SANTA MARÍA",
+    "lat": 27.4332,
+    "lon": -112.3136
+  },
+  {
+    "id": "03009",
+    "name": "SANTA ROSALÍA",
+    "lat": 27.3391,
+    "lon": -112.2634
+  },
+  {
+    "id": "03010",
+    "name": "ISLA SAN MARCOS",
+    "lat": 27.1907,
+    "lon": -112.0858
+  },
+  {
+    "id": "03011",
+    "name": "MULEGÉ",
+    "lat": 26.8963,
+    "lon": -111.9513
+  },
+  {
+    "id": "03012",
+    "name": "BAHÍA CONCEPCIÓN",
+    "lat": 26.607,
+    "lon": -111.7524
+  },
+  {
+    "id": "03013",
+    "name": "LORETO",
+    "lat": 26.015,
+    "lon": -111.3393
+  },
+  {
+    "id": "03014",
+    "name": "NOPOLO",
+    "lat": 25.9352,
+    "lon": -111.3549
+  },
+  {
+    "id": "03015",
+    "name": "PUERTO ESCONDIDO",
+    "lat": 25.8134,
+    "lon": -111.3143
+  },
+  {
+    "id": "03016",
+    "name": "SAN JUAN DE LA COSTA",
+    "lat": 24.3947,
+    "lon": -110.6828
+  },
+  {
+    "id": "03017",
+    "name": "PICHILINGUE",
+    "lat": 24.2752,
+    "lon": -110.3294
+  },
+  {
+    "id": "03018",
+    "name": "LA PAZ",
+    "lat": 24.1551,
+    "lon": -110.3263
+  },
+  {
+    "id": "03019",
+    "name": "PUNTA PRIETA",
+    "lat": 24.2203,
+    "lon": -110.3126
+  },
+  {
+    "id": "03020",
+    "name": "LOS BARRILES",
+    "lat": 23.682,
+    "lon": -109.6958
+  },
+  {
+    "id": "04001",
+    "name": "SEYBAPLAYA",
+    "lat": 19.6518,
+    "lon": -90.7084
+  },
+  {
+    "id": "04002",
+    "name": "CAYO DE ARCAS",
+    "lat": 20.1972,
+    "lon": -91.9662
+  },
+  {
+    "id": "04003",
+    "name": "CAMPECHE",
+    "lat": 19.8289,
+    "lon": -90.5818
+  },
+  {
+    "id": "04004",
+    "name": "CHAMPOTÓN",
+    "lat": 19.358,
+    "lon": -90.7215
+  },
+  {
+    "id": "04005",
+    "name": "SABANCUY",
+    "lat": 18.9951,
+    "lon": -91.1854
+  },
+  {
+    "id": "04006",
+    "name": "ISLA AGUADA",
+    "lat": 18.781,
+    "lon": -91.4917
+  },
+  {
+    "id": "04007",
+    "name": "PUERTO REAL",
+    "lat": 18.7769,
+    "lon": -91.5301
+  },
+  {
+    "id": "04008",
+    "name": "CIUDAD DEL CARMEN",
+    "lat": 18.6469,
+    "lon": -91.8484
+  },
+  {
+    "id": "04009",
+    "name": "ISLA ARENA CALKINI",
+    "lat": 20.6887,
+    "lon": -90.4526
+  },
+  {
+    "id": "04010",
+    "name": "BAHAMITAS",
+    "lat": 18.6991,
+    "lon": -91.6972
+  },
+  {
+    "id": "04011",
+    "name": "ARROYO GRANDE",
+    "lat": 18.6319,
+    "lon": -91.8237
+  },
+  {
+    "id": "06001",
+    "name": "LAS HADAS",
+    "lat": 19.0992,
+    "lon": -104.3455
+  },
+  {
+    "id": "06002",
+    "name": "PUERTO INTERIOR SAN PEDRITO",
+    "lat": 19.0647,
+    "lon": -104.2955
+  },
+  {
+    "id": "06003",
+    "name": "MANZANILLO",
+    "lat": 19.0575,
+    "lon": -104.3138
+  },
+  {
+    "id": "06004",
+    "name": "LAGUNA DE CUYUTLAN",
+    "lat": 18.9981,
+    "lon": -104.2562
+  },
+  {
+    "id": "07001",
+    "name": "PUERTO MADERO",
+    "lat": 14.7045,
+    "lon": -92.4043
+  },
+  {
+    "id": "07002",
+    "name": "SAN JOSÉ MAZATÁN",
+    "lat": 14.9212,
+    "lon": -92.6242
+  },
+  {
+    "id": "12001",
+    "name": "IXTAPA",
+    "lat": 17.6631,
+    "lon": -101.6207
+  },
+  {
+    "id": "12002",
+    "name": "ZIHUATANEJO",
+    "lat": 17.6351,
+    "lon": -101.5588
+  },
+  {
+    "id": "12003",
+    "name": "PUERTO VICENTE GUERRERO",
+    "lat": 17.2761,
+    "lon": -101.0564
+  },
+  {
+    "id": "12004",
+    "name": "ACAPULCO",
+    "lat": 16.8392,
+    "lon": -99.905
+  },
+  {
+    "id": "12005",
+    "name": "PUERTO MARQUEZ",
+    "lat": 16.7961,
+    "lon": -99.8386
+  },
+  {
+    "id": "14001",
+    "name": "PUERTO VALLARTA",
+    "lat": 20.6561,
+    "lon": -105.2435
+  },
+  {
+    "id": "14002",
+    "name": "BARA NAVIDAD",
+    "lat": 19.1992,
+    "lon": -104.6841
+  },
+  {
+    "id": "14003",
+    "name": "CHAPALA",
+    "lat": 20.2876,
+    "lon": -103.1941
+  },
+  {
+    "id": "14004",
+    "name": "AJIJIC",
+    "lat": 20.2964,
+    "lon": -103.263
+  },
+  {
+    "id": "16001",
+    "name": "LÁZARO CÁRDENAS",
+    "lat": 17.9339,
+    "lon": -102.1786
+  },
+  {
+    "id": "16002",
+    "name": "LAGO DE PATZCUARO",
+    "lat": 19.5469,
+    "lon": -101.6191
+  },
+  {
+    "id": "16003",
+    "name": "ZIRAHUEN",
+    "lat": 19.4524,
+    "lon": -101.7312
+  },
+  {
+    "id": "18001",
+    "name": "MEXCALTITLÁN",
+    "lat": 21.9054,
+    "lon": -105.4754
+  },
+  {
+    "id": "18002",
+    "name": "PUERTO BALLETO",
+    "lat": 21.6346,
+    "lon": -106.5362
+  },
+  {
+    "id": "18003",
+    "name": "SAN BLAS",
+    "lat": 21.5412,
+    "lon": -105.2921
+  },
+  {
+    "id": "18004",
+    "name": "CHACALA",
+    "lat": 21.1653,
+    "lon": -105.2279
+  },
+  {
+    "id": "18005",
+    "name": "CRUZ DE HUANACAXTLE",
+    "lat": 20.7475,
+    "lon": -105.3802
+  },
+  {
+    "id": "18006",
+    "name": "NUEVO VALLARTA",
+    "lat": 20.6913,
+    "lon": -105.2918
+  },
+  {
+    "id": "20001",
+    "name": "PUERTO ANGEL",
+    "lat": 15.6649,
+    "lon": -96.4929
+  },
+  {
+    "id": "20002",
+    "name": "SALINA CRUZ",
+    "lat": 16.1645,
+    "lon": -95.1968
+  },
+  {
+    "id": "20003",
+    "name": "MARINA STA CRUZ, HUATULCO",
+    "lat": 15.7527,
+    "lon": -96.129
+  },
+  {
+    "id": "20004",
+    "name": "BAHIA CHAHUE, HUATULCO",
+    "lat": 15.7592,
+    "lon": -96.1206
+  },
+  {
+    "id": "20005",
+    "name": "LA PASTORIA",
+    "lat": 15.9836,
+    "lon": -97.5572
+  },
+  {
+    "id": "20006",
+    "name": "PUERTO ESCONDIDO",
+    "lat": 15.8596,
+    "lon": -97.0637
+  },
+  {
+    "id": "20007",
+    "name": "MARINA STA. CRUZ-HUATULCO",
+    "lat": 15.7541,
+    "lon": -96.131
+  },
+  {
+    "id": "23001",
+    "name": "CHIQUILA",
+    "lat": 21.4338,
+    "lon": -87.3371
+  },
+  {
+    "id": "23002",
+    "name": "HOLBOX",
+    "lat": 21.5211,
+    "lon": -87.386
+  },
+  {
+    "id": "23003",
+    "name": "PUNTA SAM",
+    "lat": 21.2225,
+    "lon": -86.8006
+  },
+  {
+    "id": "23004",
+    "name": "PUERTO JUÁREZ",
+    "lat": 21.1831,
+    "lon": -86.8056
+  },
+  {
+    "id": "23005",
+    "name": "ISLA MUJERES",
+    "lat": 21.2429,
+    "lon": -86.7436
+  },
+  {
+    "id": "23006",
+    "name": "CANCÚN",
+    "lat": 21.1384,
+    "lon": -86.7616
+  },
+  {
+    "id": "23007",
+    "name": "PUERTO MORELOS",
+    "lat": 20.8414,
+    "lon": -86.8794
+  },
+  {
+    "id": "23008",
+    "name": "PLAYA DEL CARMEN",
+    "lat": 20.6259,
+    "lon": -87.0714
+  },
+  {
+    "id": "23009",
+    "name": "BANCO PLAYA",
+    "lat": 20.5274,
+    "lon": -86.9409
+  },
+  {
+    "id": "23010",
+    "name": "COZUMEL",
+    "lat": 20.5092,
+    "lon": -86.9551
+  },
+  {
+    "id": "23011",
+    "name": "PUNTA VENADO (CALICA)",
+    "lat": 20.5715,
+    "lon": -87.1256
+  },
+  {
+    "id": "23012",
+    "name": "PUERTO AVENTURAS",
+    "lat": 20.499,
+    "lon": -87.2242
+  },
+  {
+    "id": "23013",
+    "name": "PUNTA ALLEN",
+    "lat": 19.7875,
+    "lon": -87.4704
+  },
+  {
+    "id": "23014",
+    "name": "MAHAHUAL",
+    "lat": 18.7115,
+    "lon": -87.709
+  },
+  {
+    "id": "23015",
+    "name": "XCALAK",
+    "lat": 18.2737,
+    "lon": -87.8328
+  },
+  {
+    "id": "23016",
+    "name": "LA AGUADA",
+    "lat": 18.2284,
+    "lon": -87.8416
+  },
+  {
+    "id": "23017",
+    "name": "CHETUMAL",
+    "lat": 18.4914,
+    "lon": -88.3007
+  },
+  {
+    "id": "25001",
+    "name": "TOPOLOBAMPO",
+    "lat": 25.593,
+    "lon": -109.056
+  },
+  {
+    "id": "25002",
+    "name": "LA REFORMA",
+    "lat": 25.0756,
+    "lon": -108.0575
+  },
+  {
+    "id": "25003",
+    "name": "ALTATA",
+    "lat": 24.6335,
+    "lon": -107.9159
+  },
+  {
+    "id": "25004",
+    "name": "MAZATLÁN",
+    "lat": 23.1858,
+    "lon": -106.4153
+  },
+  {
+    "id": "25005",
+    "name": "TEACAPAN",
+    "lat": 22.5394,
+    "lon": -105.7427
+  },
+  {
+    "id": "25006",
+    "name": "MARINA MAZATLAN",
+    "lat": 23.2704,
+    "lon": -106.4577
+  },
+  {
+    "id": "25007",
+    "name": "MARINA EL CID",
+    "lat": 23.269,
+    "lon": -106.4646
+  },
+  {
+    "id": "25008",
+    "name": "MARINA MAZATLÁN",
+    "lat": 23.2708,
+    "lon": -106.4578
+  },
+  {
+    "id": "26001",
+    "name": "GOLFO DE SANTA CLARA",
+    "lat": 31.6557,
+    "lon": -114.5803
+  },
+  {
+    "id": "26002",
+    "name": "PUERTO PEÑASCO",
+    "lat": 31.3054,
+    "lon": -113.5447
+  },
+  {
+    "id": "26003",
+    "name": "PUERTO LIBERTAD",
+    "lat": 29.9018,
+    "lon": -112.6934
+  },
+  {
+    "id": "26004",
+    "name": "SAN CARLOS",
+    "lat": 27.9482,
+    "lon": -111.0625
+  },
+  {
+    "id": "26005",
+    "name": "MARINA REAL",
+    "lat": 27.9465,
+    "lon": -111.0927
+  },
+  {
+    "id": "26006",
+    "name": "R. SÁNCHEZ TABOADA",
+    "lat": 27.8836,
+    "lon": -110.8692
+  },
+  {
+    "id": "26007",
+    "name": "GUAYMAS",
+    "lat": 27.9196,
+    "lon": -110.886
+  },
+  {
+    "id": "26008",
+    "name": "YAVAROS",
+    "lat": 26.7069,
+    "lon": -109.518
+  },
+  {
+    "id": "27001",
+    "name": "SANCHEZ MAGALLANES",
+    "lat": 18.2963,
+    "lon": -93.854
+  },
+  {
+    "id": "27002",
+    "name": "DOS BOCAS",
+    "lat": 18.4379,
+    "lon": -93.1928
+  },
+  {
+    "id": "27003",
+    "name": "FRONTERA",
+    "lat": 18.5306,
+    "lon": -92.6553
+  },
+  {
+    "id": "27004",
+    "name": "BARRA DE CHILTEPEC",
+    "lat": 18.4416,
+    "lon": -93.0912
+  },
+  {
+    "id": "27005",
+    "name": "JONUTA",
+    "lat": 18.0859,
+    "lon": -92.1381
+  },
+  {
+    "id": "27006",
+    "name": "BARRA DE SAN PEDRO",
+    "lat": 18.6432,
+    "lon": -92.4688
+  },
+  {
+    "id": "27007",
+    "name": "VILLAHERMOSA",
+    "lat": 18.0152,
+    "lon": -92.9423
+  },
+  {
+    "id": "27008",
+    "name": "TABASQUILLO",
+    "lat": 18.374,
+    "lon": -92.6808
+  },
+  {
+    "id": "28001",
+    "name": "EL MEZQUITAL",
+    "lat": 25.2346,
+    "lon": -97.4228
+  },
+  {
+    "id": "28002",
+    "name": "BOCA CIEGA",
+    "lat": 25.0033,
+    "lon": -97.5311
+  },
+  {
+    "id": "28003",
+    "name": "EL CARBAJAL",
+    "lat": 24.5,
+    "lon": -97.7412
+  },
+  {
+    "id": "28004",
+    "name": "BOCA DE JESÚS MARÍA",
+    "lat": 24.4783,
+    "lon": -97.6831
+  },
+  {
+    "id": "28005",
+    "name": "LA PESCA",
+    "lat": 23.783,
+    "lon": -97.7699
+  },
+  {
+    "id": "28006",
+    "name": "BARRA DEL TORDO",
+    "lat": 23.0566,
+    "lon": -97.7627
+  },
+  {
+    "id": "28007",
+    "name": "ALTAMIRA",
+    "lat": 22.4882,
+    "lon": -97.8835
+  },
+  {
+    "id": "28008",
+    "name": "TAMPICO",
+    "lat": 22.2493,
+    "lon": -97.8152
+  },
+  {
+    "id": "30001",
+    "name": "COATZACOALCOS",
+    "lat": 18.1458,
+    "lon": -94.4097
+  },
+  {
+    "id": "30002",
+    "name": "TUXPAN",
+    "lat": 20.9603,
+    "lon": -97.3326
+  },
+  {
+    "id": "30003",
+    "name": "VERACRUZ",
+    "lat": 19.206,
+    "lon": -96.131
+  },
+  {
+    "id": "30004",
+    "name": "ALVARADO",
+    "lat": 18.7673,
+    "lon": -95.766
+  },
+  {
+    "id": "30005",
+    "name": "ANTÓN LIZARDO",
+    "lat": 19.0654,
+    "lon": -95.9829
+  },
+  {
+    "id": "30006",
+    "name": "BALZAPOTE",
+    "lat": 18.6224,
+    "lon": -95.0681
+  },
+  {
+    "id": "30007",
+    "name": "BARRA DE GALINDO",
+    "lat": 21.0181,
+    "lon": -97.3274
+  },
+  {
+    "id": "30008",
+    "name": "BOCA DEL RIO",
+    "lat": 19.1011,
+    "lon": -96.1014
+  },
+  {
+    "id": "30009",
+    "name": "CAZONES",
+    "lat": 20.7253,
+    "lon": -97.2001
+  },
+  {
+    "id": "30010",
+    "name": "ISLA LOBOS",
+    "lat": 21.463,
+    "lon": -97.2306
+  },
+  {
+    "id": "30011",
+    "name": "MINATITLÁN",
+    "lat": 17.9757,
+    "lon": -94.5366
+  },
+  {
+    "id": "30012",
+    "name": "NANCHITAL",
+    "lat": 18.0762,
+    "lon": -94.4145
+  },
+  {
+    "id": "30013",
+    "name": "NAUTLA",
+    "lat": 20.2384,
+    "lon": -96.7846
+  },
+  {
+    "id": "30014",
+    "name": "PAJARITOS",
+    "lat": 18.1281,
+    "lon": -94.3998
+  },
+  {
+    "id": "30015",
+    "name": "TAMIAHUA-BARRA DE CORAZONES",
+    "lat": 21.2603,
+    "lon": -97.4374
+  },
+  {
+    "id": "30016",
+    "name": "TECOLUTLA",
+    "lat": 20.4743,
+    "lon": -97.0162
+  },
+  {
+    "id": "30017",
+    "name": "TLACOTALPAN",
+    "lat": 18.6101,
+    "lon": -95.6576
+  },
+  {
+    "id": "30018",
+    "name": "ESTERO BOCA DEL RIO",
+    "lat": 19.0992,
+    "lon": -96.1037
+  },
+  {
+    "id": "30019",
+    "name": "EL CONCHAL BOCA DEL RIO",
+    "lat": 19.0972,
+    "lon": -96.1029
+  },
+  {
+    "id": "30020",
+    "name": "VILLA RICA BOCA DEL RIO",
+    "lat": 19.0848,
+    "lon": -96.1122
+  },
+  {
+    "id": "31001",
+    "name": "CELESTÚN",
+    "lat": 20.848,
+    "lon": -90.407
+  },
+  {
+    "id": "31002",
+    "name": "SISAL",
+    "lat": 21.163,
+    "lon": -90.0492
+  },
+  {
+    "id": "31003",
+    "name": "CHUBURNÁ",
+    "lat": 21.2482,
+    "lon": -89.8448
+  },
+  {
+    "id": "31004",
+    "name": "YUKALPETEN",
+    "lat": 21.2749,
+    "lon": -89.7024
+  },
+  {
+    "id": "31005",
+    "name": "PROGRESO",
+    "lat": 21.3371,
+    "lon": -89.6767
+  },
+  {
+    "id": "31006",
+    "name": "TELCHAC",
+    "lat": 21.3395,
+    "lon": -89.309
+  },
+  {
+    "id": "31007",
+    "name": "CHABIHAU",
+    "lat": 21.3551,
+    "lon": -89.1442
+  },
+  {
+    "id": "31008",
+    "name": "DZILAM DE BRAVO",
+    "lat": 21.3963,
+    "lon": -88.8801
+  },
+  {
+    "id": "31009",
+    "name": "SAN FELIPE",
+    "lat": 21.5684,
+    "lon": -88.2312
+  },
+  {
+    "id": "31010",
+    "name": "RIO LAGARTOS",
+    "lat": 21.5995,
+    "lon": -88.1607
+  },
+  {
+    "id": "31011",
+    "name": "EL CUYO",
+    "lat": 21.5185,
+    "lon": -87.6866
+  },
+  {
+    "id": "31012",
+    "name": "LAS COLORADAS",
+    "lat": 21.612,
+    "lon": -87.9985
+  }
+]
