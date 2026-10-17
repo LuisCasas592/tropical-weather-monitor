@@ -278,12 +278,76 @@ def obtener_oleaje_puertos():
     print('Oleaje:',len(result['ports']),'de',len(catalogo),'recintos; lotes fallidos:',len(result['errors']))
     return result
 
+
+
+# Malla regional de oleaje: consultas a celdas marinas independientes de los puertos.
+# Los valores son muestras de modelo, no observaciones ni una superficie continua.
+def obtener_malla_oceanica():
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    ahora=datetime.now(timezone.utc).isoformat()
+    resultado={'status':'unavailable', 'source':'Open-Meteo Marine API (malla de muestras de modelo)',
+               'fetched_utc':ahora, 'spacing_degrees':2.5, 'samples':[], 'errors':[]}
+    # Retícula regular de solicitudes. La API usa cell_selection=sea y devuelve
+    # las coordenadas de la celda elegida, que se conservan explícitamente.
+    solicitudes=[]
+    lat=5.0
+    while lat<=34.01:
+        lon=-125.0
+        while lon<=-75.01:
+            solicitudes.append((round(lat,2),round(lon,2)))
+            lon+=2.5
+        lat+=2.5
+    grupos=[solicitudes[i:i+20] for i in range(0,len(solicitudes),20)]
+    def consultar(grupo):
+        parametros={'latitude':','.join(str(p[0]) for p in grupo),
+                    'longitude':','.join(str(p[1]) for p in grupo),
+                    'current':'wave_height,wave_period,wave_direction',
+                    'timezone':'GMT','cell_selection':'sea'}
+        for intento in range(3):
+            try:
+                r=requests.get('https://marine-api.open-meteo.com/v1/marine',params=parametros,
+                               timeout=(12,55),headers={'User-Agent':'MonitorHuracanesMexico/1.3 (educational)'})
+                if r.status_code in (429,500,502,503,504) and intento<2:
+                    time.sleep(2*(intento+1));continue
+                r.raise_for_status()
+                data=r.json()
+                if isinstance(data,dict):data=[data]
+                if not isinstance(data,list) or len(data)!=len(grupo):
+                    raise ValueError('Número de muestras inesperado')
+                muestras=[]
+                for (req_lat,req_lon),item in zip(grupo,data):
+                    if not isinstance(item,dict):continue
+                    cur=item.get('current') or {}
+                    h=cur.get('wave_height');d=cur.get('wave_direction');p=cur.get('wave_period')
+                    clat=item.get('latitude');clon=item.get('longitude')
+                    if not all(isinstance(v,(int,float)) and math.isfinite(v) for v in (h,d,clat,clon)) or h<0:continue
+                    # Evita asignar una celda marina muy lejana a un punto terrestre.
+                    if abs(clat-req_lat)>1.15 or abs(clon-req_lon)>1.15:continue
+                    muestras.append({'lat':round(clat,3),'lon':round(clon,3),'height':round(h,2),
+                        'direction':round(d%360,1),
+                        'period':round(p,1) if isinstance(p,(int,float)) and math.isfinite(p) and p>0 else None,
+                        'time':cur.get('time')})
+                return muestras
+            except Exception:
+                if intento==2:raise
+                time.sleep(2*(intento+1))
+    # Concurrencia reducida para no saturar el proveedor gratuito.
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        tareas=[pool.submit(consultar,g) for g in grupos]
+        for tarea in as_completed(tareas):
+            try:resultado['samples'].extend(tarea.result())
+            except Exception as exc:resultado['errors'].append(str(exc)[:150])
+    resultado['status']='ok' if resultado['samples'] and not resultado['errors'] else ('partial' if resultado['samples'] else 'unavailable')
+    print('Malla oceánica:',len(resultado['samples']),'muestras; lotes fallidos:',len(resultado['errors']))
+    return resultado
+
 if __name__ == '__main__':
     wind = obtener_gfs()
     nhc, centers = obtener_productos_nhc()
     waves = obtener_oleaje_puertos()
-    payload = {'waves': waves, 'wind': wind, 'nhc': nhc, 'centers': centers,
-               'published_utc': datetime.now(timezone.utc).isoformat(), 'schema_version': 3}
+    wave_grid = obtener_malla_oceanica()
+    payload = {'waves': waves, 'wave_grid': wave_grid, 'wind': wind, 'nhc': nhc, 'centers': centers,
+               'published_utc': datetime.now(timezone.utc).isoformat(), 'schema_version': 4}
     path = OUTPUT / 'meteorologia.json'
     path.write_text(json.dumps(payload, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     print('Publicado:', path, 'bytes:', path.stat().st_size)
